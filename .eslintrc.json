@@ -38,7 +38,7 @@
 			}
 		}],
 		"max-len": "off",
-		"linebreak-style": ["warn", "windows"],
+		"linebreak-style": "off",
 		"new-cap": "off",
 		"jsx-quotes": ["warn", "prefer-double"],
 		"@typescript-eslint/no-restricted-imports": [

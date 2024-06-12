@@ -1,0 +1,16 @@
+runs:
+  using: composite
+  steps:
+    - name: Setup Node v20.10.0
+      uses: actions/setup-node@v3
+      with:
+        node-version: "20.10.0"
+    - name: Install Yarn
+      shell: bash
+      run: npm install -g yarn
+    - name: Install Dependencies
+      shell: bash
+      run: yarn install --frozen-lockfile
+    - name: Lint Project
+      shell: bash
+      run: yarn lint

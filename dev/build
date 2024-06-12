@@ -1,0 +1,6 @@
+#!/bin/bash
+
+cd "$( dirname "${BASH_SOURCE[0]}" )/.."
+
+VERSION="v$(node -p "require('./package.json').version")"
+docker build -t danielnhoward/sso:$VERSION -t danielnhoward/sso:latest .
