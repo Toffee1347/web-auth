@@ -1,4 +1,4 @@
-import authTargets from './../../../../auth-targets';
+import oauth2Clients from './../../../../oauth2-clients';
 import {makeAccessToken} from './../../../../server/oauth2';
 import {getAuthenticatedSession} from './../../../../server/session';
 
@@ -18,8 +18,8 @@ export async function POST(req: NextRequest) {
 
 	let urlSuffix = '';
 
-	const target = authTargets[data.target];
-	switch (target.tokenType) {
+	const target = oauth2Clients[data.target];
+	switch (target.grantType) {
 	case 'token': {
 		const params = await makeAccessToken(data.target, session.user);
 		urlSuffix = `#${params}`;

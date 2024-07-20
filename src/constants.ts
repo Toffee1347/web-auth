@@ -5,7 +5,10 @@ export enum CookieName {
 }
 export const SESSION_COOKIE_MAX_AGE = 60 * 60 * 24 * 30; // 30 days
 
-export const ACCESS_TOKEN_EXPIRES_SECONDS = 60 * 60 * 24 * 10; // 10 days
+export const OAUTH2_TOKEN_LENGTH = 50; // Must match token field length in access_tokens and refresh_token in schema.sql
+export const OAUTH2_CODE_EXPIRES_SECONDS = 60; // 1 minute
+export const ACCESS_TOKEN_EXPIRES_SECONDS = 60 * 5; // 10 minutes
+export const REFRESH_TOKEN_EXPIRES_SECONDS = 60 * 60 * 24 * 30; // 30 days
 
 export const EMAIL_AUTH_CODE_EXPIRES_MINUTES = 10;
 export const RESET_PASSWORD_TOKEN_EXPIRES_MINUTES = 10;

@@ -26,15 +26,26 @@ export interface RawUser {
 	admin: boolean;
 }
 
-export interface RawAccessTokenData {
+// export interface RawAccessTokenData {
+// 	user_id: string;
+// 	target: string;
+// 	expires: string;
+// }
+// export interface AccessTokenData {
+// 	user: User;
+// 	target: string;
+// 	expires: Date;
+// }
+
+export interface RawOAuth2CodeData {
 	user_id: string;
-	target: string;
+	client_id: string;
 	expires: string;
 }
-export interface AccessTokenData {
-	user: User;
-	target: string;
-	expires: Date;
+export interface RawRefreshTokenData {
+	user_id: string;
+	client_id: string;
+	expires: string;
 }
 
 export interface SessionApiRequestBody {

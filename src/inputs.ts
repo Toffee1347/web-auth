@@ -185,6 +185,26 @@ export const getUserValidationData: ValidationData = {
 		},
 	},
 };
+export const oauth2CodeValidationData: ValidationData = {
+	inputs: {
+		grant_type: {
+			type: 'string',
+			required: true,
+		},
+		code: {
+			type: 'string',
+			required: true,
+		},
+		client_id: {
+			type: 'string',
+			required: true,
+		},
+		client_secret: {
+			type: 'string',
+			required: true,
+		},
+	},
+};
 
 interface ValidationDataMapEntry {
 	validationData: ValidationData;
@@ -229,5 +249,8 @@ export const apiValidationDataMap: {[key: string]: ValidationDataMapEntry} = {
 	},
 	'get-user': {
 		validationData: getUserValidationData,
+	},
+	'oauth2/token': {
+		validationData: oauth2CodeValidationData,
 	},
 };

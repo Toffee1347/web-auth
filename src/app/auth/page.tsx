@@ -1,4 +1,4 @@
-import authTargets from './../../auth-targets';
+import oauth2Clients from '../../oauth2-clients';
 import {getSession} from './../../server/session';
 import Link from './../components/link';
 import MiddleIsland from './../components/middle-island';
@@ -25,7 +25,7 @@ export default function AuthPage({searchParams}: SearchParamsProps) {
 	}
 
 	const targetValue = filteredSearchParams.target;
-	const target = authTargets[targetValue];
+	const target = oauth2Clients[targetValue];
 	if (!target) {
 		return (
 			<MiddleIsland>

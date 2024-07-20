@@ -32,11 +32,25 @@ CREATE TABLE sessions (
 	wait_for_auth_user_id UUID REFERENCES users (id)
 );
 
-CREATE TABLE access_tokens (
-	token UUID NOT NULL PRIMARY KEY,
+CREATE TABLE ouath2_codes (
+	code CHAR(50) NOT NULL PRIMARY KEY,
 	user_id UUID REFERENCES users (id),
-	target TEXT NOT NULL,
+	client_id TEXT NOT NULL,
 	created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	expires TIMESTAMP NOT NULL
 );
-CREATE INDEX idx_access_tokens_user_id_target ON access_tokens (user_id, target);
+
+CREATE TABLE refresh_tokens (
+	token CHAR(50) NOT NULL PRIMARY KEY,
+	user_id UUID REFERENCES users (id),
+	client_id TEXT NOT NULL,
+	created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	expires TIMESTAMP NOT NULL
+);
+
+CREATE TABLE access_tokens (
+	token CHAR(50) NOT NULL PRIMARY KEY,
+	refresh_token CHAR(50) REFERENCES refresh_tokens (token),
+	created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	expires TIMESTAMP NOT NULL
+);

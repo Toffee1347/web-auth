@@ -1,7 +1,7 @@
 import {Client} from 'pg';
 
 import type {ProfilePictureType} from './../constants';
-import type {RawSession, RawUser, RawAccessTokenData} from './types.d';
+import type {RawSession, RawUser, RawAccessTokenData, RawOAuth2CodeData, RawRefreshTokenData} from './types.d';
 import type {ClientConfig, QueryResult, QueryResultRow} from 'pg';
 
 class Database {
@@ -243,42 +243,95 @@ class Database {
 		);
 	}
 
-	public async createAccessToken(token: string, userId: string, target: string, expiresSeconds: number) {
+	// public async createAccessToken(token: string, userId: string, target: string, expiresSeconds: number) {
+	// 	await this.query(
+	// 		`INSERT INTO access_tokens (token, user_id, target, expires) VALUES ($1, $2, $3, NOW() + INTERVAL '${expiresSeconds} SECONDS')`,
+	// 		[token, userId, target],
+	// 	);
+	// }
+
+	// public async getAccessTokenData(token: string): Promise<RawAccessTokenData | undefined> {
+	// 	const {rows} = await this.query<RawAccessTokenData>(
+	// 		'SELECT user_id, target, EXTRACT(EPOCH FROM expires) AS expires FROM access_tokens WHERE token = $1',
+	// 		[token],
+	// 	);
+
+	// 	return rows[0];
+	// }
+
+	// public async getAccessToken(userId: string, target: string): Promise<string | undefined> {
+	// 	const {rows} = await this.query<{token: string}>(
+	// 		'SELECT token FROM access_tokens WHERE user_id = $1 AND target = $2',
+	// 		[userId, target],
+	// 	);
+
+	// 	return rows[0]?.token;
+	// }
+
+	// public async updateAccessTokenExpiry(token: string, expiresSeconds: number) {
+	// 	await this.query(
+	// 		`UPDATE access_tokens SET expires = NOW() + INTERVAL '${expiresSeconds} SECONDS' WHERE token = $1`,
+	// 		[token],
+	// 	);
+	// }
+
+	// public async deleteAccessToken(token: string) {
+	// 	await this.query(
+	// 		`DELETE FROM access_tokens WHERE token = $1`,
+	// 		[token],
+	// 	);
+	// }
+
+	public async createOAuth2Code(code: string, clientId: string, userId: string, expiresSeconds: number) {
 		await this.query(
-			`INSERT INTO access_tokens (token, user_id, target, expires) VALUES ($1, $2, $3, NOW() + INTERVAL '${expiresSeconds} SECONDS')`,
-			[token, userId, target],
+			`INSERT INTO ouath2_codes (code, user_id, client_id, expires) VALUES ($1, $2, $3, NOW() + INTERVAL '${expiresSeconds} SECONDS')`,
+			[code, clientId, userId],
 		);
 	}
 
-	public async getAccessTokenData(token: string): Promise<RawAccessTokenData | undefined> {
-		const {rows} = await this.query<RawAccessTokenData>(
-			'SELECT user_id, target, EXTRACT(EPOCH FROM expires) AS expires FROM access_tokens WHERE token = $1',
-			[token],
+	public async getOAuth2CodeData(code: string): Promise<RawOAuth2CodeData | undefined> {
+		const {rows} = await this.query<RawOAuth2CodeData>(
+			'SELECT user_id, client_id, EXTRACT(EPOCH FROM expires) AS expires FROM ouath2_codes WHERE code = $1',
+			[code],
 		);
 
 		return rows[0];
 	}
 
-	public async getAccessToken(userId: string, target: string): Promise<string | undefined> {
-		const {rows} = await this.query<{token: string}>(
-			'SELECT token FROM access_tokens WHERE user_id = $1 AND target = $2',
-			[userId, target],
+	public async deleteOAuth2Code(code: string) {
+		await this.query(
+			`DELETE FROM ouath2_codes WHERE code = $1`,
+			[code],
 		);
-
-		return rows[0]?.token;
 	}
 
-	public async updateAccessTokenExpiry(token: string, expiresSeconds: number) {
+	public async createRefreshToken(token: string, userId: string, clientId: string, expiresSeconds: number) {
 		await this.query(
-			`UPDATE access_tokens SET expires = NOW() + INTERVAL '${expiresSeconds} SECONDS' WHERE token = $1`,
+			`INSERT INTO refresh_tokens (token, user_id, client_id, expires) VALUES ($1, $2, $3, NOW() + INTERVAL '${expiresSeconds} SECONDS')`,
+			[token, clientId, userId],
+		);
+	}
+
+	public async getRefreshTokenExpiry(token: string): Promise<string | undefined> {
+		const {rows} = await this.query<{expires: string}>(
+			'SELECT EXTRACT(EPOCH FROM expires) AS expires FROM refresh_tokens WHERE token = $1',
+			[token],
+		);
+
+		return rows[0]?.expires;
+	}
+
+	public async deleteRefreshToken(token: string) {
+		await this.query(
+			`DELETE FROM refresh_tokens WHERE token = $1`,
 			[token],
 		);
 	}
 
-	public async deleteAccessToken(token: string) {
+	public async createAccessToken(token: string, refreshToken: string, expiresSeconds: number) {
 		await this.query(
-			`DELETE FROM access_tokens WHERE token = $1`,
-			[token],
+			`INSERT INTO refresh_tokens (token, refresh_token, expires) VALUES ($1, $2, NOW() + INTERVAL '${expiresSeconds} SECONDS')`,
+			[token, refreshToken],
 		);
 	}
 }
