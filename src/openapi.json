@@ -1,0 +1,86 @@
+{
+	"openapi": "3.0.3",
+	"info": {
+		"title": "SSO API",
+		"version": "Version 1",
+		"x-logo": {
+			"url": "https://raw.githubusercontent.com/danielhoward-me/sso/main/public/static/img/icon.svg"
+		}
+	},
+	"servers": [
+		{"url":"https://sso.danielhoward.me/api/v1"}
+	],
+	"paths": {
+		"/confirm-email": {
+			"post": {
+				"summary": "Confirm email address",
+				"description": "Called within the interface once a user has entered the code that has been sent to their email",
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"required": ["authCode"],
+								"properties": {
+									"authCode": {
+										"type": "string",
+										"example": "G23-FS0"
+									}
+								}
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"$ref": "#/components/responses/200"
+					},
+					"400": {
+						"$ref": "#/components/responses/400"
+					}
+				}
+			}
+		}
+	},
+	"components": {
+		"responses": {
+			"200": {
+				"description": "Operation was successful",
+				"content": {
+					"application/json": {
+						"schema": {
+							"type": "object",
+							"properties": {
+								"successful": {
+									"type": "boolean",
+									"example": "true"
+								}
+							}
+						}
+					}
+				}
+			},
+			"400": {
+				"description": "Request was formatted incorrectly",
+				"content": {
+					"application/json": {
+						"schema": {
+							"oneOf": [
+								{
+									"type": "object",
+									"properties": {
+										"successful": {
+											"type": "boolean",
+											"example": "false"
+										}
+									}
+								}
+							]
+						}
+					}
+				}
+			}
+		}
+	}
+}
